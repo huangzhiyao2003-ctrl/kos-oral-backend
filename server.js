@@ -7,9 +7,11 @@ import { buildPromptV2, getJsonSchema } from "./prompt-config-v2.js";
 dotenv.config();
 
 const app = express();
+
 app.use(cors({
   origin: "*"
 }));
+
 app.use(express.json({ limit: "1mb" }));
 
 const client = new OpenAI({
@@ -34,7 +36,10 @@ app.post("/api/generate", async (req, res) => {
     } = req.body || {};
 
     if (!spu || !contentGroup || !contentAngle || !format || !persona || !goal || !pain) {
-      return res.status(400).json({ ok: false, error: "missing_required_fields" });
+      return res.status(400).json({
+        ok: false,
+        error: "missing_required_fields"
+      });
     }
 
     const prompt = buildPromptV2({
@@ -58,13 +63,17 @@ app.post("/api/generate", async (req, res) => {
           schema: getJsonSchema(format)
         }
       },
-      reasoning: { effort: "medium" }
+      reasoning: {
+        effort: "medium"
+      }
     });
 
     const data = JSON.parse(response.output_text);
 
-    return res.json({ ok: true, data });
-
+    return res.json({
+      ok: true,
+      data
+    });
   } catch (err) {
     console.error("OPENAI_ERROR_DETAIL:", err);
 
@@ -75,4 +84,10 @@ app.post("/api/generate", async (req, res) => {
       status: err?.status || null
     });
   }
+});
+
+const port = process.env.PORT || 3000;
+
+app.listen(port, () => {
+  console.log(`API server running on http://localhost:${port}`);
 });
