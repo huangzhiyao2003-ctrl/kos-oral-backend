@@ -63,17 +63,15 @@ app.post("/api/generate", async (req, res) => {
 
     const data = JSON.parse(response.output_text);
     return res.json({ ok: true, data });
-} catch (err) {
-  console.error("OPENAI_ERROR_DETAIL:", err);
-  return res.status(500).json({
-    ok: false,
-    error: "generation_failed",
-    message: err?.message || "unknown_error",
-    status: err?.status || null
-  });
-}
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`API server running on http://localhost:${port}`);
+  } catch (err) {
+    console.error("OPENAI_ERROR_DETAIL:", err);
+
+    return res.status(500).json({
+      ok: false,
+      error: "generation_failed",
+      message: err?.message || "unknown_error",
+      status: err?.status || null
+    });
+  }
 });
