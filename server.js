@@ -62,6 +62,7 @@ app.post("/api/generate", async (req, res) => {
     });
 
     const data = JSON.parse(response.output_text);
+
     return res.json({ ok: true, data });
 
   } catch (err) {
